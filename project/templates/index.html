@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block main %}
+    <div class="chart-container mb-3">
+        <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+    </div>
+    <script>
+    const xValues = [
+        {% for category in index_data %}
+            "{{ category.name | safe }}",
+        {% endfor %}
+    ];
+
+    const yValues = [
+        {% for category in index_data %}
+            {{ category.percentage_spent | int }},
+        {% endfor %}
+    ];
+
+    const totalSpending = yValues.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    const minPercentageToShow = 1;
+
+    let adjustedTotalSpending = totalSpending;
+    let adjustmentNeeded = false;
+
+    for (let i = 0; i < yValues.length; i++) {
+        if ((yValues[i] / totalSpending) < (minPercentageToShow / 100)) {
+            yValues[i] = minPercentageToShow;
+            adjustedTotalSpending -= (totalSpending - minPercentageToShow);
+            adjustmentNeeded = true;
+        }
+    }
+
+    if (adjustmentNeeded) {
+        console.log("Adjustment needed. Adjusted Total Spending:", adjustedTotalSpending);
+    }
+
+    const barColors = [
+        "#b91d47",
+        "#00aba9",
+        "#2b5797",
+        "#e8c3b9",
+        "#1e7145"
+        // Add more colors as needed
+    ];
+
+    // Add more random colors if the number of categories exceeds the number of predefined colors
+    while (barColors.length < xValues.length) {
+        const randomColor = "#" + Math.floor(Math.random()*16777215).toString(16);
+        barColors.push(randomColor);
+    }
+
+    new Chart("myChart", {
+        type: "pie",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: "Spending Trends",
+                fontSize: 30,
+                fontColor: "#c5ccd3"
+            },
+            legend: {
+                    labels: {
+                        fontSize: 16, // Set the font size for the legend
+                        fontColor: "#c5ccd3"
+                    }
+                },
+        }
+    });
+    </script>
+{% endblock %}

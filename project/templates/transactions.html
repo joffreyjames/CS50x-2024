@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Transactions
+{% endblock %}
+
+{% block main %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("delete-transactions-form").addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent the form from submitting immediately
+
+                // Display confirmation dialog
+                if (confirm("Are you sure you want to delete all transactions?")) {
+                    // If user confirms, submit the form
+                    this.submit();
+                } else {
+                    // If user cancels, do nothing
+                    return false;
+                }
+            });
+        });
+    </script>
+
+    <form action="/update_category" method="post">
+        <table class="table table-bordered table-striped table-dark mb-3">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                    <tr>
+                        <td> {{ transaction.transaction_date }}</td>
+                        <td> {{ transaction.description }}</td>
+                        <td>
+                            <select name="category_{{ transaction.transaction_id }}">
+                                {% for category in categories %}
+                                    <option value="{{ category.budget_id }}" {% if category.budget_id == transaction.user_category_id %} selected {% endif %}>{{ category.category_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td> {{ usd(transaction.amount) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button class="btn btn-primary mb-3" type="submit">Update Categories</button>
+    </form>
+    <form action="/add_transactions" method="get">
+        <button class="btn btn-primary mb-3" type="submit" name="add_transactions">Add Transactions</button>
+    </form>
+    <form id="delete-transactions-form" action="/delete_transactions" method="post">
+        <button id="delete-transactions-btn" class="btn btn-danger mb-3" type="submit" name="delete_transactions">Delete Transactions</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Budgets
+{% endblock %}
+
+{% block main %}
+    <table class="table table-bordered table-striped table-dark mb-3">
+        <thead>
+            <tr>
+                <th scope="col">Budget Item</th>
+                <th scope="col">Monthly Budget</th>
+                <th scope="col">Budget Spent</th>
+                <th scope="col">Remaining Budget</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td> {{ category.name }}</td>
+                    <td> {{ usd(category.monthly_budget) }}</td>
+                    <td> {{ usd(category.budget_spent) }} </td>
+                    <td> {{ usd(category.remaining_budget) }}</td>
+                </tr>
+            {% endfor %}
+
+            <tr class="bg-success">
+                <th scope="row">Total Monthly Budget</th>
+                <td>{{ usd(total_monthly_budget) }}</td>
+                <th scope="row" colspan="2"></th>
+            </tr>
+            <tr class="bg-success">
+                <th scope="row" colspan="2"></th>
+                <th scope="row">Total Remaining Budget</th>
+                <td >{{ usd(total_remaining_budget) }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <form action="/categories" method="get">
+        <button class="btn btn-primary mb-3" type="submit">Add Budget Categories</button>
+    </form>
+{% endblock %}

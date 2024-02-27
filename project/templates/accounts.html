@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Accounts
+{% endblock %}
+
+{% block main %}
+    <table class="table table-bordered table-striped table-dark mb-3">
+        <thead>
+            <tr>
+                <th scope="col">Account Name</th>
+                <th scope="col">Type</th>
+                <th scope="col">Bank</th>
+                <th scope="col">Balance (USD)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account in account_data %}
+                <tr>
+                    <td> {{ account.name }}</td>
+                    <td> {{ account.type }}</td>
+                    <td> {{ account.bank }}</td>
+                    <td> {{ usd(account.current_value) }}</td>
+                </tr>
+            {% endfor %}
+
+            <tr class="bg-success">
+                <th scope="row" colspan="2"></th>
+                <th scope="row">Total Cash Balance</th>
+                <td >{{ usd(total_cash) }}</td>
+            </tr>
+
+            <tr class="bg-warning">
+                <th scope="row" colspan="2"></th>
+                <th scope="row">Total Debt</th>
+                <td>{{ usd(total_debt) }}</td>
+            </tr>
+
+            <tr class="bg-warning">
+                <th scope="row" colspan="2"></th>
+                <th scope="row">Net Worth</th>
+                <td>{{ usd(net_worth) }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <form action="/accounts" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="name" placeholder="Account Name" type="text">
+        </div>
+        <div class="mb-3">
+            <select class="form-control mx-auto w-auto" name="type" placeholder="Account Type" type="text">
+                <option value="">Select the Type of Account</option>
+                <option value="Bank">Bank</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Investment">Investment</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" class="form-control mx-auto w-auto" name="bank" placeholder="Bank" type="text">
+        </div>
+        <button class="btn btn-primary" type="submit">Add Account</button>
+    </form>
+{% endblock %}

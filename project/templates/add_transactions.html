@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Add/Upload Transactions
+{% endblock %}
+
+{% block main %}
+    <form action="/add_transactions" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="formFileSm" class="form-label mx-auto w-auto">Select CSV File</label>
+            <input class="form-control form-control-sm mx-auto w-auto" id="formFileSm" type="file" name="csv_file">
+        </div>
+        <select class="form-control mx-auto w-auto mb-3" name="account" placeholder="Account" type="text">
+            {% for account in accounts %}
+                <option value="{{ account.account_id }}">{{ account.name }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-primary" type="submit">Upload Transactions</button>
+    </form>
+{% endblock %}
